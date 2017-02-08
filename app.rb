@@ -12,32 +12,44 @@ class Keepion < Sinatra::Base
 
   get '/' do
     get_sysinfo
-    @list = IWList.scan(WLAN)
+    @list = IWList.scan(WLAN) rescue []
     slim :index
   end
 
   post '/connect' do
-    if (@essid = params[:essid])
-      Netconf.install
-      Netconf.connect(params[:essid], params[:password])
+    get_vars
+    if good_password(@password)
+      Netconf.connect(@essid, @password)
     end
     slim :connect
   end
 
   post '/hostap' do
-    if (params[:essid] && params[:password])
-      @essid = params[:essid]
-      Netconf.hostap(params[:essid], params[:password])
+    get_vars
+    if good_password(@password)
+      Netconf.hostap(@essid, @password)
+      get_sysinfo
+      slim :hostap
+    else
+      get_sysinfo
+      slim :index
     end
-    get_sysinfo
-    slim :hostap
   end
 
   private
 
+  def get_vars
+    @essid, @password = params[:essid], params[:password]
+  end
+
+  def good_password(pass)
+    (8..90) === pass.length && pass !~ /\s/
+  end
+
   def get_sysinfo
     @data = "KeePion! #{`uname -a`}"
     @wlan = `iwconfig #{WLAN}`
+    @route = `route -n`
     @ipaddr = `ip addr`
   end
 end

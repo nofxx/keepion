@@ -3,4 +3,6 @@ source 'https://rubygems.org'
 gem 'puma'
 gem 'slim'
 gem 'sinatra'
-gem 'wiringpi'
+if RUBY_PLATFORM =~ /armv7/
+  gem 'wiringpi'
+end
