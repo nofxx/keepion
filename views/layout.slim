@@ -1,0 +1,35 @@
+doctype html
+html
+  head
+    meta[charset="UTF-8"]
+    meta[name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"]
+    title xLan
+    link[href="/css/bootstrap.min.css" rel="stylesheet"]
+    link[href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"]
+  body
+    .container-fluid
+    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded.fixed-top
+      button.navbar-toggler.navbar-toggler-right[type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"]
+        span.navbar-toggler-icon
+      a.navbar-brand[href="#"] xLAN
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item.active
+            a.nav-link[href="#"]
+              i.fa.fa-wifi[aria-hidden="true"]
+              span.sr-only
+                | (current)
+          li.nav-item 
+            a.nav-link[href="#"]
+              | Link
+          li.nav-item
+            a.nav-link.disabled[href="#"]
+              | Disabled
+    .container
+      br
+      br
+      br
+      h1 = @title
+      == yield
+    script[src="/js/jquery.min.js" crossorigin="anonymous"]
+    script[src="/js/bootstrap.min.js" crossorigin="anonymous"]

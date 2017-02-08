@@ -1,0 +1,18 @@
+.row
+  .col-5
+    h3 HostAP
+  .col-7.text-right
+    h3 = @essid
+
+form[action="hostap" method="post"]
+  hr
+
+  a[href="/"]
+    | KeepiOn
+
+br
+pre
+  code = @wlan
+hr
+pre
+  code = @ipaddr
