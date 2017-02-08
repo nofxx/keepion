@@ -20,9 +20,12 @@ end
 
 # This exception class is raised if the interface provided to
 # IWList.scan isn't in the form <tt>ethN</tt> or <tt>wlanN</tt>
-class InvalidInterface < Exception
+class InvalidInterface < RuntimeError
 end
 
+#
+# Reads and parses iwlist output
+#
 class IWList
   # Runs "<i>iwlist interface scan</i>" in a subshell and returns a list of hashes.
   #
@@ -38,9 +41,8 @@ class IWList
   # Raises InvalidInterface exception if the first parameter doesn't look like a
   # reasonable interface.
   def self.scan(interface, options = {})
-    if interface !~ /^(en|eth|wlan)\d+$/  # Is someone playing games?
-      raise InvalidInterface
-    end
+    # Is someone playing games?
+    raise InvalidInterface if interface !~ /^(en|eth|wlan)\d+$/
 
     iwlist_output = ''
     iwlist_command = options[:bin] || `which iwlist`.chomp
@@ -54,12 +56,12 @@ class IWList
       end
     end
 
-    raise 'iwlist empty!' unless iwlist_output
+    raise 'IWlist empty!' unless iwlist_output
 
-    aps = iwlist_output.scan(@@IWList_block).map do |m|
+    aps = iwlist_output.scan(@iwlist_block).map do |m|
       ap = AP.new
       puts "AP #{m}"
-      self.order.each_with_index do |name, i|
+      order.each_with_index do |name, i|
         value = m[i]
         # Bitrates is a list of 'number Mb/s;'.
         # This is to simplify the IWList_block regex
@@ -82,7 +84,7 @@ class IWList
   end
 
   # The regex used for extracting each AP's data from the output of iwlist.
-  @@IWList_block = %r{
+  @iwlist_block = %r{
   \s+  Cell \s (\d+) \s - \s Address: \s ((?:[A-Z0-9][A-Z0-9]:?)+)
   \s+  Channel:(\d+)
   \s+  Frequency:\d+ .*?
@@ -98,13 +100,12 @@ class IWList
 #  \s+  Extra: \s Last \s beacon: \s (\d+)ms \s ago
   }mx
 
-  private
-
   # The order of values grouped by the IWList_block regex
   def self.order
     [:cell, :address, :channel, :quality, :encrypted, :essid, :essid_index]
-#, :protocol, :mode, :channel,
- #    :encrypted, :bitrates, :quality, :signal_level, :noise_level, :ie, :last_beacon]
+    # :protocol, :mode, :channel,
+    # :encrypted, :bitrates, :quality, :signal_level,
+    # :noise_level, :ie, :last_beacon]
   end
 end
 

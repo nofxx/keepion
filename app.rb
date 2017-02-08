@@ -10,14 +10,18 @@ class Keepion < Sinatra::Base
   set environment: :production, port: 80, server: :puma
   WLAN = 'wlan0'.freeze
 
+  before do
+    @name = `uname -nr`
+  end
+
   get '/' do
-    get_sysinfo
+    sysinfo
     @list = IWList.scan(WLAN) rescue []
     slim :index
   end
 
   post '/connect' do
-    get_vars
+    wifi_vars
     if good_password(@password)
       Netconf.connect(@essid, @password)
     end
@@ -25,20 +29,20 @@ class Keepion < Sinatra::Base
   end
 
   post '/hostap' do
-    get_vars
+    wifi_vars
     if good_password(@password)
       Netconf.hostap(@essid, @password)
-      get_sysinfo
+      sysinfo
       slim :hostap
     else
-      get_sysinfo
+      sysinfo
       slim :index
     end
   end
 
   private
 
-  def get_vars
+  def wifi_vars
     @essid, @password = params[:essid], params[:password]
   end
 
@@ -46,14 +50,11 @@ class Keepion < Sinatra::Base
     (8..90) === pass.length && pass !~ /\s/
   end
 
-  def get_sysinfo
-    @data = "KeePion! #{`uname -a`}"
+  def sysinfo
     @wlan = `iwconfig #{WLAN}`
     @route = `route -n`
     @ipaddr = `ip addr`
   end
 end
 
-if __FILE__ == $0
-  Keepion.run!
-end
+Keepion.run! if __FILE__ == $PROGRAM_NAME

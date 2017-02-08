@@ -1,20 +1,26 @@
 require 'erb'
 require 'fileutils'
 
+# Bind class for ERB configs... need this?
 class BindMe
   def initialize(essid, password)
     @essid = essid
     @password = password
   end
-  def get_binding
+
+  def bind
     binding
   end
 end
 
+#
+# Configure Linux Network
+#
 module Netconf
-
+  # Conf templates
   CONF = File.join(File.dirname(__FILE__), '..', 'conf').freeze
-  SYSD = '/etc/systemd/network'
+  # systemd network
+  SYSD = '/etc/systemd/network'.freeze
 
   FILES = {
     'eth0.network' => "#{SYSD}/eth0.network",
@@ -50,7 +56,7 @@ module Netconf
       vars = BindMe.new(essid, password)
       conf = ERB.new(File.read(File.join(CONF, 'wpa_supplicant.conf.erb')))
       File.write('/etc/wpa_supplicant/wpa_supplicant.conf',
-                 conf.result(vars.get_binding))
+                 conf.result(vars.bind))
       install_client
       start_client!
     end
@@ -59,7 +65,7 @@ module Netconf
       puts "HostAP! #{essid}"
       vars = BindMe.new(essid, password)
       conf = ERB.new(File.read(File.join(CONF, 'hostapd.conf.erb')))
-      File.write('/etc/hostapd/hostapd.conf', conf.result(vars.get_binding))
+      File.write('/etc/hostapd/hostapd.conf', conf.result(vars.bind))
       install_host
       start_host!
     end
