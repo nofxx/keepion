@@ -1,0 +1,7 @@
+#
+# Wifi AP
+#
+ifconfig wlan0 down && ifconfig wlan0 10.1.1.1 gw 255.255.255.0 up
+systemctl start hostapd
+systemctl start dnsmasq
+

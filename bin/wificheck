@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+#
+# Wifi check
+#
+gw = `ip route show`[/default.*/][/\d+\.\d+\.\d+\.\d+/]
+
+exit 1 if gw.nil? || gw.empty?
+
+# puts "GW: #{gw}"
+ping = system("ping -c2 #{gw} > /dev/null")
+
+if ping
+  # Good internet!
+  exit 0
+else
+  print 'Restarting....IFDOWN...'
+  system("ifdown --force wlan0")
+  puts '.IFUP!'
+  system("ifup wlan0")
+end

@@ -5,27 +5,28 @@
   .col-9
     a.btn.btn-info.btn-block[href="/"] Scan
 
-form[action="connect" method="post"]
-  .card
-    .card-block
-      h4.card-title
-        = @list.count
-        |  wLAN
-      - @list.each do |ap|
-        .custom-controls-stacked
-          label.custom-control.custom-radio
-            input.custom-control-input[id="wlan_#{ap.essid}" type="radio" name="essid" value="#{ap.essid}"]
-            span.custom-control-indicator
-            span.custom-control-description
-              = ap.essid
-              i<>[class="fa fa-#{ap.encrypted ? 'lock' : 'unlock'}" aria-hidden="true"]
-              = ap.signal
-      br
-      .form-group
-        input.form-control[type="text" name="password" value="" placeholder="Password"]
-      hr
-      button.btn.btn-primary.btn-block[type="submit"]
-        | CONNECT!
+- if @list
+  form[action="connect" method="post"]
+    .card
+      .card-block
+        h4.card-title
+          = @list.count
+          |  wLAN
+        - @list.each do |ap|
+          .custom-controls-stacked
+            label.custom-control.custom-radio
+              input.custom-control-input[id="wlan_#{ap.essid}" type="radio" name="essid" value="#{ap.essid}"]
+              span.custom-control-indicator
+              span.custom-control-description
+                = ap.essid
+                i<>[class="fa fa-#{ap.encrypted ? 'lock' : 'unlock'}" aria-hidden="true"]
+                = ap.signal
+        br
+        .form-group
+          input.form-control[type="text" name="password" value="" placeholder="Password"]
+        hr
+        button.btn.btn-primary.btn-block[type="submit"]
+          | CONNECT!
 
 .row
   .col-5
@@ -51,8 +52,11 @@ form[action="hostap" method="post"]
 br
 pre
   code = @wlan
-
 hr
 br
 pre
   code = @ipaddr
+hr
+br
+pre
+  code = @route

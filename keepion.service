@@ -1,0 +1,13 @@
+[Unit]
+Description=Keep It On
+
+[Service]
+Type=simple
+ExecStart=/bin/bundle exec ruby app.rb -e production
+Restart=always
+KillMode=process
+Environment=RACK_ENV=production
+WorkingDirectory=/home/alarm/keepion
+
+[Install]
+WantedBy=multi-user.target
