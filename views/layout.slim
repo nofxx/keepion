@@ -14,18 +14,20 @@ html
         span.navbar-toggler-icon
       a.navbar-brand[href="#"] xLAN
       #navbarSupportedContent.collapse.navbar-collapse
-        ul.navbar-nav.mr-auto
-          li.nav-item.active
-            a.nav-link[href="#"]
-              i.fa.fa-wifi[aria-hidden="true"]
-              span.sr-only
-                | (current)
-          li.nav-item
-            a.nav-link[href="#"]
-              | Link
-          li.nav-item
-            a.nav-link.disabled[href="#"]
-              | Disabled
+        /ul.navbar-nav.mr-auto
+        /  li.nav-item.active
+        /    a.nav-link[href="#"]
+        /      i.fa.fa-wifi[aria-hidden="true"]
+        /      span.sr-only
+        /        | (current)
+        /  li.nav-item
+        /    a.nav-link[href="#"]
+        /      | Link
+        /  li.nav-item
+        /    a.nav-link.disabled[href="#"]
+        /      | Disabled
+        span.navbar-text
+          = @name
     .container
       br
       br
