@@ -3,7 +3,9 @@
     h3 WiFi
     hr
   .col-9
-    a.btn.btn-info.btn-block[href="/"] Scan
+    a.btn.btn-info.btn-block[href="/"]
+      i.fa.fa-refresh<>[aria-hidden="true"]
+      | Scan
 
 - if @list
   form[action="connect" method="post"]
@@ -12,6 +14,7 @@
         h4.card-title
           = @list.count
           |  wLAN
+        hr
         - @list.each do |ap|
           .custom-controls-stacked
             label.custom-control.custom-radio
@@ -24,9 +27,11 @@
         br
         .form-group
           input.form-control[type="text" name="password" value="" placeholder="Password"]
-        hr
         button.btn.btn-primary.btn-block[type="submit"]
-          | CONNECT!
+          i.fa.fa-wifi<>[aria-hidden="true"]
+          | CONNECT
+
+br
 
 .row
   .col-5
@@ -47,16 +52,23 @@ form[action="hostap" method="post"]
       .form-group
         input.form-control[type="text" name="password" value="" placeholder="Password"]
       button.btn.btn-primary.btn-block[type="submit"]
-        | Host AP
+        i.fa.fa-wifi<>[aria-hidden="true"]
+        | HOST
 
 br
-pre
-  code = @wlan
-hr
-br
-pre
-  code = @ipaddr
-hr
-br
-pre
-  code = @route
+button.btn.btn-default.btn-block[data-toggle="collapse" data-target="#backlog"]
+  i.fa.fa-terminal<>[aria-hidden="true"]
+  | Log
+
+#backlog.collapse
+  br
+  pre
+    code = @wlan
+  hr
+  br
+  pre
+    code = @ipaddr
+  hr
+  br
+  pre
+    code = @route
